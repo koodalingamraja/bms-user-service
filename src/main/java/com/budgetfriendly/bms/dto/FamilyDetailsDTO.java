@@ -2,7 +2,7 @@ package com.budgetfriendly.bms.dto;
 
 import java.util.Date;
 
-public class FamilDetailsDTO {
+public class FamilyDetailsDTO {
 
     private Long id;
     private String email;

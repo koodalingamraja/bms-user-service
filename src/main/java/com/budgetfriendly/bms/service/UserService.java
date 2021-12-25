@@ -8,4 +8,6 @@ public interface UserService {
     BaseResponse createUser(UserDTO userDTO);
 
     BaseResponse getUserByUserName(String userName);
+
+    BaseResponse updateUser(UserDTO userDTO);
 }

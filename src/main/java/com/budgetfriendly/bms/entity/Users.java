@@ -1,5 +1,7 @@
 package com.budgetfriendly.bms.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -38,6 +40,7 @@ public class Users {
 
     @Column(name = "created_at")
     private Date createdAt;
+
 
     @ManyToOne
     @JoinColumn(name = "state_id_fk")

@@ -1,12 +1,15 @@
 package com.budgetfriendly.bms.service.impl;
 
 import com.budgetfriendly.bms.dto.MasterCityDTO;
+import com.budgetfriendly.bms.dto.MasterExpensiveCategoryDTO;
 import com.budgetfriendly.bms.dto.MasterRelationshipDTO;
 import com.budgetfriendly.bms.dto.MasterStateDTO;
 import com.budgetfriendly.bms.entity.MasterCity;
+import com.budgetfriendly.bms.entity.MasterExpensiveCategory;
 import com.budgetfriendly.bms.entity.MasterRelationship;
 import com.budgetfriendly.bms.entity.MasterState;
 import com.budgetfriendly.bms.repository.MasterCityRepository;
+import com.budgetfriendly.bms.repository.MasterExpensiveCategoryRepository;
 import com.budgetfriendly.bms.repository.MasterRealtionshipRepository;
 import com.budgetfriendly.bms.repository.MasterStateRepository;
 import com.budgetfriendly.bms.response.BaseResponse;
@@ -32,6 +35,9 @@ public class MasterServiceImpl implements MasterService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private MasterExpensiveCategoryRepository expensiveCategoryRepository;
 
     @Override
     public BaseResponse createState(MasterStateDTO masterStateDTO) {
@@ -84,8 +90,27 @@ public class MasterServiceImpl implements MasterService {
             masterRelationship.setCreatedAt(new Date());
             MasterRelationship dbMasterRelationship = realtionshipRepository.save(masterRelationship);
             response.setStatus("success");
-            response.setMessage("relationship save successfully");
-            response.setData(masterRelationship);
+            response.setMessage("relationship saved successfully");
+            response.setData(dbMasterRelationship);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return response;
+    }
+
+    @Override
+    public BaseResponse createExpensiveCategory(MasterExpensiveCategoryDTO expensiveCategoryDTO) {
+        BaseResponse response = new BaseResponse();
+        try{
+            MasterExpensiveCategory expensiveCategory = new MasterExpensiveCategory();
+            expensiveCategory.setExpensiveCategoryName(expensiveCategoryDTO.getExpensiveCategoryName());
+            expensiveCategory.setExpensiveCategoryCode(expensiveCategoryDTO.getExpensiveCategoryCode());
+            expensiveCategory.setStatus(Boolean.TRUE);
+            expensiveCategory.setCreatedAt(new Date());
+            MasterExpensiveCategory dbMasterExpensiveCategory = expensiveCategoryRepository.save(expensiveCategory);
+            response.setStatus("success");
+            response.setMessage("expensive category saved successfully");
+            response.setData(dbMasterExpensiveCategory);
         }catch (Exception e){
             e.printStackTrace();
         }

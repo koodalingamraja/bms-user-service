@@ -22,4 +22,9 @@ public class UserController {
     public BaseResponse getByUsername(@RequestParam ("username") String username){
         return userService.getUserByUserName(username);
     }
+
+    @PostMapping("updateUser")
+    public BaseResponse updateUser(@RequestBody UserDTO userDTO){
+        return userService.updateUser(userDTO);
+    }
 }

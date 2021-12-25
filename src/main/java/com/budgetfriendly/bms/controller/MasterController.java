@@ -1,6 +1,7 @@
 package com.budgetfriendly.bms.controller;
 
 import com.budgetfriendly.bms.dto.MasterCityDTO;
+import com.budgetfriendly.bms.dto.MasterExpensiveCategoryDTO;
 import com.budgetfriendly.bms.dto.MasterRelationshipDTO;
 import com.budgetfriendly.bms.dto.MasterStateDTO;
 import com.budgetfriendly.bms.response.BaseResponse;
@@ -31,6 +32,11 @@ public class MasterController {
     @PostMapping("createRelationship")
     public BaseResponse createRelationship(@RequestBody MasterRelationshipDTO masterRelationshipDTO){
         return masterService.createRelationship(masterRelationshipDTO);
+    }
+
+    @PostMapping("createExpensiveCategory")
+    public BaseResponse createExpensiveCategory(@RequestBody MasterExpensiveCategoryDTO expensiveCategoryDTO){
+        return masterService.createExpensiveCategory(expensiveCategoryDTO);
     }
 
 }

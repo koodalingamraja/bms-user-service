@@ -103,4 +103,62 @@ public class UserServiceImpl implements UserService {
         }
         return response;
     }
+
+    @Override
+    public BaseResponse updateUser(UserDTO userDTO) {
+        BaseResponse response = new BaseResponse();
+        try{
+            Users user = null;
+            if(userDTO.getId() != null && userDTO.getId() != 0){
+                user  = usersRepository.getByUserId(userDTO.getId());
+               if(user != null){
+                   if(userDTO.getUserName() != null && !userDTO.getUserName().isEmpty()) {
+                       user.setUserName(userDTO.getUserName());
+                   }
+                   if(userDTO.getEmail() != null && !userDTO.getEmail().isEmpty()) {
+                       user.setEmail(userDTO.getEmail());
+                   }
+                   if(userDTO.getMobile() != null && !userDTO.getMobile().isEmpty()) {
+                       user.setMobile(userDTO.getMobile());
+                   }
+                   if(userDTO.getDob() != null) {
+                       Date dob = logics.getBirthDate(userDTO.getDob());
+                       user.setDob(dob);
+                       user.setAge(logics.getAge(userDTO.getDob()));
+                   }
+                   if(userDTO.getGender() != null && !userDTO.getGender().isEmpty()) {
+                       user.setGender(userDTO.getGender());
+                   }
+                   if(userDTO.getMasterCityDTO().getMasterStateDTO().getId() != null && userDTO.getMasterCityDTO().getMasterStateDTO().getId() != 0){
+                        Optional<MasterState> dbMasterState = stateRepository.findByIdAndStatusTrue(userDTO.getMasterCityDTO().getMasterStateDTO().getId());
+                        if(dbMasterState.isPresent()) {
+                            user.setMasterState(dbMasterState.get());
+                        }
+                    }
+                   if(userDTO.getMasterCityDTO().getId() != null && userDTO.getMasterCityDTO().getId() != 0){
+                        Optional<MasterCity> dbMastercity = cityRepository.findByIdAndStatusTrue(userDTO.getMasterCityDTO().getId());
+                        if(dbMastercity.isPresent()){
+                            user.setMasterCity(dbMastercity.get());
+                        }
+                    }
+                   Users dbUser = null;
+                    if(user != null) {
+                        dbUser  = usersRepository.save(user);
+                    }
+                    response.setStatus("success");
+                    response.setMessage("Hi" +" "+ userDTO.getUserName()  +" "+"your successfully updated");
+                    response.setData(dbUser);
+               }else{
+                   response.setStatus("failed");
+                   response.setMessage("please provide valid user id");
+               }
+            }else{
+                response.setStatus("failed");
+                response.setMessage("please provide user id");
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return response;
+    }
 }
