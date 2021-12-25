@@ -84,7 +84,7 @@ public class MasterServiceImpl implements MasterService {
             masterRelationship.setCreatedAt(new Date());
             MasterRelationship dbMasterRelationship = realtionshipRepository.save(masterRelationship);
             response.setStatus("success");
-            response.setMessage("relationship saved successfully");
+            response.setMessage("relationship save successfully");
             response.setData(masterRelationship);
         }catch (Exception e){
             e.printStackTrace();
