@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
                 userDTO.getMasterCityDTO().setMasterStateDTO(stateDTO);
                 userDTO = modelMapper.map(user , UserDTO.class);
                 response.setStatus("success");
-                response.setMessage("your details");
+                response.setMessage("details get successfully");
                 response.setData(userDTO);
             }else{
                 response.setStatus("failed");
