@@ -94,4 +94,6 @@ public class UserDTO {
     public void setMasterCityDTO(MasterCityDTO masterCityDTO) {
         this.masterCityDTO = masterCityDTO;
     }
+
+
 }

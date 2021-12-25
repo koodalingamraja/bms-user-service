@@ -1,5 +1,6 @@
 package com.budgetfriendly.bms.service.impl;
 
+import com.budgetfriendly.bms.common.CommonLogics;
 import com.budgetfriendly.bms.dto.MasterCityDTO;
 import com.budgetfriendly.bms.dto.MasterStateDTO;
 import com.budgetfriendly.bms.dto.UserDTO;
@@ -16,7 +17,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 
@@ -38,20 +38,21 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private MasterRealtionshipRepository relationshipRepository;
 
+    @Autowired
+    private CommonLogics logics;
+
     @Override
     public BaseResponse createUser(UserDTO userDTO) {
         BaseResponse response = new BaseResponse();
         try{
-
+            Date dob = logics.getBirthDate(userDTO.getDob());
             Users users = new Users();
             users.setUserName(userDTO.getUserName());
             users.setPassword(userDTO.getPassword());
             users.setEmail(userDTO.getEmail());
             users.setMobile(userDTO.getMobile());
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            String date = format.format(userDTO.getDob());
-            Date dob = format.parse(date);
             users.setDob(dob);
+            users.setAge(logics.getAge(userDTO.getDob()));
             users.setGender(userDTO.getGender());
             users.setStatus(Boolean.TRUE);
             users.setCreatedAt(new Date());

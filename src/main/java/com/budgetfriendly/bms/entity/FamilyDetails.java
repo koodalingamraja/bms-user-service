@@ -25,6 +25,9 @@ public class FamilyDetails {
     @Column(name = "gender")
     private String gender;
 
+    @Column(name = "age")
+    private int age;
+
     @Column(name = "active_status")
     private Boolean status;
 
@@ -109,5 +112,13 @@ public class FamilyDetails {
 
     public void setMasterRelationship(MasterRelationship masterRelationship) {
         this.masterRelationship = masterRelationship;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 }

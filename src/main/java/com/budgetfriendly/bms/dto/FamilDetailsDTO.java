@@ -85,4 +85,6 @@ public class FamilDetailsDTO {
     public void setMasterRelationshipDTO(MasterRelationshipDTO masterRelationshipDTO) {
         this.masterRelationshipDTO = masterRelationshipDTO;
     }
+
+
 }

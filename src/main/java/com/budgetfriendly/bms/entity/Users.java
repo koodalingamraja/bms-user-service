@@ -30,6 +30,9 @@ public class Users {
     @Column(name = "gender")
     private String gender;
 
+    @Column(name = "age")
+    private int age;
+
     @Column(name = "active_status")
     private Boolean status;
 
@@ -130,5 +133,13 @@ public class Users {
 
     public void setMasterCity(MasterCity masterCity) {
         this.masterCity = masterCity;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 }
