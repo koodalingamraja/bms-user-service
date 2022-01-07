@@ -10,4 +10,6 @@ public interface UserService {
     BaseResponse getUserByUserName(String userName);
 
     BaseResponse updateUser(UserDTO userDTO);
+
+    BaseResponse inActiveUser(Long userId,Long reqUserId);
 }

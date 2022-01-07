@@ -27,4 +27,10 @@ public class UserController {
     public BaseResponse updateUser(@RequestBody UserDTO userDTO){
         return userService.updateUser(userDTO);
     }
+
+    @GetMapping("in-activeUser")
+    public BaseResponse inActiveUser(@RequestParam("userId") Long userId){
+        Long reqUserId = 1L;
+        return userService.inActiveUser(userId,reqUserId);
+  }
 }

@@ -1,16 +1,12 @@
 package com.budgetfriendly.bms.service.impl;
 
 import com.budgetfriendly.bms.common.CommonLogics;
+import com.budgetfriendly.bms.constants.UserConstant;
 import com.budgetfriendly.bms.dto.MasterCityDTO;
 import com.budgetfriendly.bms.dto.MasterStateDTO;
 import com.budgetfriendly.bms.dto.UserDTO;
-import com.budgetfriendly.bms.entity.MasterCity;
-import com.budgetfriendly.bms.entity.MasterState;
-import com.budgetfriendly.bms.entity.Users;
-import com.budgetfriendly.bms.repository.MasterCityRepository;
-import com.budgetfriendly.bms.repository.MasterRealtionshipRepository;
-import com.budgetfriendly.bms.repository.MasterStateRepository;
-import com.budgetfriendly.bms.repository.UsersRepository;
+import com.budgetfriendly.bms.entity.*;
+import com.budgetfriendly.bms.repository.*;
 import com.budgetfriendly.bms.response.BaseResponse;
 import com.budgetfriendly.bms.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -41,6 +37,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private CommonLogics logics;
 
+    @Autowired
+    private MasterRoleRepository roleRepository;
+
+    @Autowired
+    private UserRoleMappingRepository roleMappingRepository;
+
     @Override
     public BaseResponse createUser(UserDTO userDTO) {
         BaseResponse response = new BaseResponse();
@@ -70,6 +72,18 @@ public class UserServiceImpl implements UserService {
             }
 
             Users dbUser = usersRepository.save(users);
+
+            Optional<MasterRole> dbMasterRole = roleRepository.findById(userDTO.getMasterRoleDTO().getId());
+
+            if(dbMasterRole.isPresent()){
+                UserRoleMapping roleMapping = new UserRoleMapping();
+                roleMapping.setUsers(dbUser);
+                roleMapping.setMasterRole(dbMasterRole.get());
+                roleMapping.setStatus(Boolean.TRUE);
+                roleMapping.setCreatedAt(new Date());
+                roleMappingRepository.save(roleMapping);
+            }
+
             response.setStatus("success");
             response.setMessage("Hi" +" "+ userDTO.getUserName()  +" "+"your successfully registered");
             response.setData(dbUser);
@@ -145,6 +159,20 @@ public class UserServiceImpl implements UserService {
                     if(user != null) {
                         dbUser  = usersRepository.save(user);
                     }
+
+                    if(userDTO.getMasterRoleDTO().getId() != null && userDTO.getMasterRoleDTO().getId() != 0) {
+                        Optional<MasterRole> dbMasterRole = roleRepository.findById(userDTO.getMasterRoleDTO().getId());
+                        if(dbMasterRole.isPresent()){
+                            UserRoleMapping roleMapping = new UserRoleMapping();
+                            roleMapping.setUsers(dbUser);
+                            roleMapping.setMasterRole(dbMasterRole.get());
+                            roleMapping.setStatus(Boolean.TRUE);
+                            roleMapping.setCreatedAt(new Date());
+                            roleMappingRepository.save(roleMapping);
+                        }
+                    }
+
+
                     response.setStatus("success");
                     response.setMessage("Hi" +" "+ userDTO.getUserName()  +" "+"your successfully updated");
                     response.setData(dbUser);
@@ -157,6 +185,47 @@ public class UserServiceImpl implements UserService {
                 response.setMessage("please provide user id");
             }
         }catch(Exception e){
+            e.printStackTrace();
+        }
+        return response;
+    }
+
+    @Override
+    public BaseResponse inActiveUser(Long userId, Long reqUserId) {
+        BaseResponse response = new BaseResponse();
+        try{
+            if(userId != null) {
+                UserRoleMapping userRoleMapping = null;
+                if (reqUserId != null) {
+                    userRoleMapping = roleMappingRepository.findByUserId(reqUserId);
+                }
+                if(userRoleMapping != null){
+
+                    if(userRoleMapping.getMasterRole().getRoleName().equalsIgnoreCase(UserConstant.ADMIN_USER)){
+
+                        Users dbUser = usersRepository.getByUserId(userId);
+
+                        if(dbUser != null){
+                            dbUser.setStatus(Boolean.FALSE);
+                            usersRepository.save(dbUser);
+                            response.setStatus("success");
+                            response.setMessage("successfully user has been in-active");
+                            response.setData("in-active user");
+                        }else{
+                            response.setStatus("failed");
+                            response.setMessage("please provide valid user id");
+                        }
+                    }else{
+                        response.setStatus("failed");
+                        response.setMessage("you don't have a access");
+                    }
+                }
+            }else {
+                response.setStatus("failed");
+                response.setMessage("please provide any user id");
+            }
+
+        }catch (Exception e){
             e.printStackTrace();
         }
         return response;
