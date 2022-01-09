@@ -163,12 +163,10 @@ public class UserServiceImpl implements UserService {
                     if(userDTO.getMasterRoleDTO().getId() != null && userDTO.getMasterRoleDTO().getId() != 0) {
                         Optional<MasterRole> dbMasterRole = roleRepository.findById(userDTO.getMasterRoleDTO().getId());
                         if(dbMasterRole.isPresent()){
-                            UserRoleMapping roleMapping = new UserRoleMapping();
-                            roleMapping.setUsers(dbUser);
-                            roleMapping.setMasterRole(dbMasterRole.get());
-                            roleMapping.setStatus(Boolean.TRUE);
-                            roleMapping.setCreatedAt(new Date());
-                            roleMappingRepository.save(roleMapping);
+                            UserRoleMapping dbUserRoleMapping = roleMappingRepository.findUserById(dbUser.getId());
+                            dbUserRoleMapping.setUsers(dbUserRoleMapping.getUsers());
+                            dbUserRoleMapping.setMasterRole(dbMasterRole.get());
+                            roleMappingRepository.save(dbUserRoleMapping);
                         }
                     }
 
@@ -197,11 +195,11 @@ public class UserServiceImpl implements UserService {
             if(userId != null) {
                 UserRoleMapping userRoleMapping = null;
                 if (reqUserId != null) {
-                    userRoleMapping = roleMappingRepository.findByUserId(reqUserId);
+                    userRoleMapping = roleMappingRepository.findUserById(reqUserId);
                 }
                 if(userRoleMapping != null){
 
-                    if(userRoleMapping.getMasterRole().getRoleName().equalsIgnoreCase(UserConstant.ADMIN_USER)){
+                    if(userRoleMapping.getMasterRole().getRoleName().equalsIgnoreCase(UserConstant.ROLE_ADMIN)){
 
                         Users dbUser = usersRepository.getByUserId(userId);
 
